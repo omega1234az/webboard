@@ -7,22 +7,38 @@
       <div class="w-[70%] ">
         <div class="w-full h-[50px] bg-[#455DFF] rounded-md my-5"></div>
         <div class="grid grid-cols-8 gap-5 justify-items-stretch ">
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px]"></div>
+          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
+            <img class="w-[70px]" src="../public/img/forum/food.png" alt="">
+            <p class="text-xl text-white font-bold">อาหาร</p>
+          </div>
+          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
+            <img class="w-[70px]" src="../public/img/forum/book.png" alt="">
+            <p class="text-xl text-white font-bold">หนังสือ</p>
+          </div>
+          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
+            <img class="w-[70px]" src="../public/img/forum/sport.png" alt="">
+            <p class="text-xl text-white font-bold">กีฬา</p>
+          </div>
+          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
+            <img class="w-[70px]" src="../public/img/forum/pet.png" alt="">
+            <p class="text-xl text-white font-bold">สัตว์เลี่้ยง</p>
+          </div>
+          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
+            <img class="w-[70px]" src="../public/img/forum/makeup.png" alt="">
+            <p class="text-xl text-white font-bold">เมคอัพ</p>
+          </div>
+          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
+            <img class="w-[70px]" src="../public/img/forum/art.png" alt="">
+            <p class="text-xl text-white font-bold">ศิลปะ</p>
+          </div>
+          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
+            <img class="w-[70px]" src="../public/img/forum/wit.png" alt="">
+            <p class="text-xl text-white font-bold">วิทยาศาสตร์</p>
+          </div>
+          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
+            <img class="w-[70px]" src="../public/img/forum/travel.png" alt="">
+            <p class="text-xl text-white font-bold">ต่างประเทศ</p>
+          </div>
         </div>
         <div class="w-full h-[5px] bg-[#3A3939] my-5 rounded-md"></div>
         <div class="w-full flex gap-10">
