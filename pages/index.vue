@@ -5,7 +5,9 @@
       <div class="w-[15%] ">
       </div>
       <div class="w-[70%] ">
-        <div class="w-full h-[50px] bg-[#455DFF] rounded-md my-5"></div>
+        <div
+              class="w-full py-3 bg-[#8D38C9] rounded-md text-white text-2xl font-bold items-center justify-center flex mb-5">
+              เลือกห้อง</div>
         <div class="grid grid-cols-8 gap-5 justify-items-stretch ">
           <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
             <img class="w-[70px]" src="../public/img/forum/food.png" alt="">
@@ -44,6 +46,9 @@
         <div class="w-full flex gap-10">
 
           <div class="w-[60%] flex flex-col gap-5">
+            <div
+              class="w-full py-3 bg-[#8D38C9] rounded-md text-white text-2xl font-bold items-center justify-center flex">
+              กระทู้ล่าสุด</div>
             <div class="w-full  bg-[#3A3939] rounded-3xl px-5 py-5">
               <div class="text-white flex w-full">
                 <img class="w-[40px] object-contain rounded-full h-[40px] bg-white"
@@ -105,11 +110,11 @@
                 </div>
                 <div class="bg-[#202020] rounded-3xl flex px-5 py-2 gap-2 items-center">
                   <img class="object-contain rounded-full w-5 h-5 " src="../public/img/save.png" alt="">
-                  <p class="text-[#8B8B8B] font-bold">Save</p>
+                  <p class="text-[#8B8B8B] font-bold">บันทึก</p>
                 </div>
                 <div class="bg-[#202020] rounded-3xl flex px-5 py-2 gap-2 items-center">
                   <img class="object-contain rounded-full w-5 h-5 " src="../public/img/share.png" alt="">
-                  <p class="text-[#8B8B8B] font-bold">Share</p>
+                  <p class="text-[#8B8B8B] font-bold">แชร์</p>
                 </div>
               </div>
             </div>
@@ -118,11 +123,12 @@
 
           <div class="w-[40%] ">
             <div
-              class="w-full py-3 bg-[#455DFF] rounded-md text-white text-2xl font-bold items-center justify-center flex">
-              POPULAR</div>
+              class="w-full py-3 bg-[#8D38C9] rounded-md text-white text-2xl font-bold items-center justify-center flex">
+              ยอดนิยม</div>
             <ul
-              class="w-full bg-[#3A3939] py-5 rounded-2xl mt-4 text-white text-2xl px-5 font-bold gap-7 flex flex-col">
+              class="w-full bg-[#3A3939] py-8 rounded-2xl mt-4 text-white text-2xl px-5 font-bold gap-7 flex flex-col">
               <li>วิศวกรรมซอฟต์แวร์</li>
+              <li>การ์ตูน</li>
               <li>รถเมย์มอ</li>
               <li>ร้านเด็ดหน้ามอ</li>
               <li>เรื่องหลอนมพ</li>
