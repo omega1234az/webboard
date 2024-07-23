@@ -1,15 +1,18 @@
 <template>
   <div>
-    <div class="w-full text-white bg-[#0F0F0F] flex items-center px-5 py-5">
-      <div class="w-[15%] font-bold text-2xl text-center">
-        <div>UP WEBBOARD</div>
+    <div class="w-full text-white bg-[#0F0F0F] flex items-center ">
+      <div class="justify-center font-bold text-2xl text-center w-[10%]">
+        <div class="">LOGO</div>
       </div>
-      <div class="w-[55%] text-center font-bold text-xl grid grid-cols-3">
-        <div>หน้าแรก</div>
-        <div>ยอดนิยม</div>
-        <div>ตั้งกระทู้</div>
+      <!-- Updated container class to properly contain the menu -->
+      <div class="flex-1 ">
+        <div class="container mx-auto text-center py-2 px-2 font-bold text-xl grid grid-cols-3">
+          <NuxtLink to="/" class="p-5 hover:bg-[#525050] rounded-md">Home</NuxtLink>
+          <NuxtLink to="/" class="p-5 hover:bg-[#525050] rounded-md">Popular</NuxtLink>
+          <NuxtLink to="/" class="p-5 hover:bg-[#525050] rounded-md">Create</NuxtLink>
+        </div>
       </div>
-      <div class="w-[15%] text-center font-bold text-2xl text-black relative">
+      <div class="px-2 text-center font-bold text-2xl text-black relative">
         <div class="relative">
           <input
             v-model="searchQuery"
@@ -35,51 +38,152 @@
             >
               {{ item.title }}
             </li>
-            <li v-if="filteredItems.length === 0" class="p-2 text-gray-500">ไม่พบข้อมูล</li>
+            <li v-if="filteredItems.length === 0" class="p-2 text-gray-500">
+              ไม่พบข้อมูล
+            </li>
           </ul>
         </div>
       </div>
-      <div class="w-[15%] flex justify-center">
-        <img
-          class="object-contain rounded-full w-[50px] h-[50px] bg-white"
-          src="https://images.immediate.co.uk/production/volatile/sites/3/2023/03/Jujutsu-Kaisen-Cropped-dbe733b.jpg?quality=90&resize=844,563"
-        />
+      <div class="w-[10%] flex justify-center relative">
+        <div v-if="!isLoggedIn">
+          <button
+            @click="redirectToLogin"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Login
+          </button>
+        </div>
+        <div v-else class="relative">
+          <img
+            @click="toggleProfileDropdown"
+            class="object-contain rounded-full w-[50px] h-[50px] bg-white cursor-pointer"
+            :src="`http://localhost:8000/uploads/profile/${profile.img}`"
+          />
+          <ul
+            v-show="profileDropdownVisible"
+            class="absolute right-0 mt-2 w-48 bg-[#3A3939] rounded-lg text-xl font-bold"
+          >
+            <li
+              @click="navigateTo('/profile')"
+              class="px-4 py-2 hover:bg-[#525050] cursor-pointer"
+            >
+              หน้าของฉัน
+            </li>
+            <li
+              @click="navigateTo('settings')"
+              class="px-4 py-2 hover:bg-[#525050] cursor-pointer"
+            >
+              การตั้งค่า
+            </li>
+            <li
+              @click="logout"
+              class="px-4 py-2 hover:bg-[#525050] cursor-pointer"
+            >
+              ออกจากระบบ
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      searchQuery: '',
-      dropdownVisible: false,
-      items: [
-        
-      ],
-    };
-  },
-  computed: {
-    filteredItems() {
-      return this.items.filter(item =>
-        item.title.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    },
-  },
-  methods: {
-    selectItem(item) {
-      this.searchQuery = item.title;
-      this.dropdownVisible = false;
-    },
-    hideDropdown() {
-      // Delay hiding the dropdown to allow click events to register
-      setTimeout(() => {
-        this.dropdownVisible = false;
-      }, 100);
+<script setup>
+import axios from 'axios';
+
+
+const searchQuery = ref('');
+const dropdownVisible = ref(false);
+const profileDropdownVisible = ref(false);
+const items = ref([]);
+const isLoggedIn = ref(false);
+const profile = ref({});
+
+const router = useRouter();
+const route = useRoute();
+
+async function checkAuthAndFetchProfile() {
+  await checkAuth();
+  if (isLoggedIn.value) {
+    await fetchProfile();
+  }
+}
+
+function checkAuth() {
+  const token = localStorage.getItem('token');
+  isLoggedIn.value = !!token;
+}
+
+async function fetchProfile() {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      return;
     }
-  },
-};
+    const response = await axios.get('http://localhost:8000/api/user/me', {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+    profile.value = response.data;   
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    localStorage.removeItem('token');
+    isLoggedIn.value=false;
+  }
+}
+
+function logout() {
+  localStorage.removeItem('token');
+  isLoggedIn.value = false;
+  profile.value = {};
+  router.push('/login');
+}
+
+function selectItem(item) {
+  searchQuery.value = item.title;
+  dropdownVisible.value = false;
+}
+
+function hideDropdown() {
+  setTimeout(() => {
+    dropdownVisible.value = false;
+  }, 100);
+}
+
+function toggleProfileDropdown() {
+  profileDropdownVisible.value = !profileDropdownVisible.value;
+}
+
+function redirectToLogin() {
+  resetData();
+  router.push({ name: 'login' });
+}
+
+const filteredItems = computed(() => {
+  return items.value.filter((item) =>
+    item.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
+
+function resetData() {
+  searchQuery.value = '';
+  dropdownVisible.value = false;
+  profileDropdownVisible.value = false;
+  items.value = [];
+  profile.value = {};
+}
+
+onMounted(async () => {
+  await checkAuthAndFetchProfile();
+});
+
+watchEffect(async () => {
+  // ตรวจสอบการเปลี่ยนแปลงของ route
+  route.path; // เพิ่มบรรทัดนี้เพื่อให้ watchEffect ทำงานเมื่อ route เปลี่ยน
+  await checkAuthAndFetchProfile();
+});
 </script>
 
 <style scoped>

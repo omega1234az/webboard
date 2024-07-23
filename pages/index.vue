@@ -1,153 +1,104 @@
 <template>
-  <title>Home</title>
-  <div class="w-screen h-full bg-[#191A1A]">
-    <div class="flex justify-between py-5">
-      <div class="w-[15%] ">
-      </div>
-      <div class="w-[70%] ">
-        <div
-              class="w-full py-3 bg-[#8D38C9] rounded-md text-white text-2xl font-bold items-center justify-center flex mb-5">
-              เลือกห้อง</div>
-        <div class="grid grid-cols-8 gap-5 justify-items-stretch ">
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
-            <img class="w-[70px]" src="../public/img/forum/food.png" alt="">
-            <p class="text-xl text-white font-bold">อาหาร</p>
+    <title>Home</title>
+    <div class="w-full  h-full bg-[#191A1A]">
+      <div class="flex flex-col md:flex-row justify-between py-5">
+        <div class="hidden md:block w-[15%]"></div>
+        <div class="w-full md:container px-4 md:px-0">
+          <div class="w-full py-3 bg-[#455DFF] rounded-md text-white text-xl md:text-2xl font-bold items-center justify-center flex mb-5">
+            เลือกห้อง
           </div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
-            <img class="w-[70px]" src="../public/img/forum/book.png" alt="">
-            <p class="text-xl text-white font-bold">หนังสือ</p>
-          </div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
-            <img class="w-[70px]" src="../public/img/forum/sport.png" alt="">
-            <p class="text-xl text-white font-bold">กีฬา</p>
-          </div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
-            <img class="w-[70px]" src="../public/img/forum/pet.png" alt="">
-            <p class="text-xl text-white font-bold">สัตว์เลี่้ยง</p>
-          </div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
-            <img class="w-[70px]" src="../public/img/forum/makeup.png" alt="">
-            <p class="text-xl text-white font-bold">เมคอัพ</p>
-          </div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
-            <img class="w-[70px]" src="../public/img/forum/art.png" alt="">
-            <p class="text-xl text-white font-bold">ศิลปะ</p>
-          </div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
-            <img class="w-[70px]" src="../public/img/forum/wit.png" alt="">
-            <p class="text-xl text-white font-bold">วิทยาศาสตร์</p>
-          </div>
-          <div class="bg-[#3A3939] rounded-lg w-full h-[150px] p-5 items-center justify-center flex flex-col gap-2">
-            <img class="w-[70px]" src="../public/img/forum/travel.png" alt="">
-            <p class="text-xl text-white font-bold">ต่างประเทศ</p>
+          <div class="overflow-x-auto   2xl:overflow-x-hidden">
+          <div class="flex md:grid md:grid-cols-8 gap-3 md:gap-3 pb-2 md:pb-0" style="min-width: max-content;">
+            <div
+              v-for="category in categories"
+              :key="category.name"
+              class="bg-[#3A3939] rounded-lg flex-shrink-0 w-[120px] md:w-full h-[120px] md:h-[150px] p-3 md:p-5 items-center justify-center flex flex-col gap-2"
+            >
+              <img class="w-[50px] md:w-[70px]" :src="'/_nuxt/public/categories/'+category.img" :alt="category.name" />
+              <p class="text-lg md:text-xl text-white font-bold text-center">{{ category.name }}</p>
+            </div>
           </div>
         </div>
-        <div class="w-full h-[5px] bg-[#3A3939] my-5 rounded-md"></div>
-        <div class="w-full flex gap-10">
-
-          <div class="w-[60%] flex flex-col gap-5">
-            <div
-              class="w-full py-3 bg-[#8D38C9] rounded-md text-white text-2xl font-bold items-center justify-center flex">
-              กระทู้ล่าสุด</div>
-            <div class="w-full  bg-[#3A3939] rounded-3xl px-5 py-5">
-              <div class="text-white flex w-full">
-                <img class="w-[40px] object-contain rounded-full h-[40px] bg-white"
-                  src="https://images.immediate.co.uk/production/volatile/sites/3/2023/03/Jujutsu-Kaisen-Cropped-dbe733b.jpg?quality=90&resize=844,563"
-                  alt="">
-                <p class="text-white ml-3 justify-center items-center flex">Gojo Satoru</p>
+          <div class="w-full h-[5px] bg-[#3A3939] my-5 rounded-md"></div>
+          <div class="w-full flex flex-col md:flex-row gap-5 md:gap-10">
+            <div class="w-full md:w-[60%] flex flex-col gap-5">
+              <div class="w-full py-3 bg-[#455DFF] rounded-md text-white text-xl md:text-2xl font-bold items-center justify-center flex">
+                กระทู้ล่าสุด
               </div>
-              <div class="text-white flex w-full text-2xl mt-2">แมวพันธ์ไหนเนื้ออร่อยที่สุด</div>
-              <div class="flex mt-3 gap-2 text-lg">
-                <div class="bg-[#202020] rounded-3xl flex px-5 py-2 gap-2 items-center">
-                  <img class="object-contain rounded-full w-5 h-5 " src="../public/img/comment.png" alt="">
-                  <p class="text-[#8B8B8B] font-bold">5</p>
-                </div>
-                <div class="bg-[#202020] rounded-3xl flex px-5 py-2 gap-2 items-center">
-                  <img class="object-contain rounded-full w-5 h-5 " src="../public/img/save.png" alt="">
-                  <p class="text-[#8B8B8B] font-bold">Save</p>
-                </div>
-                <div class="bg-[#202020] rounded-3xl flex px-5 py-2 gap-2 items-center">
-                  <img class="object-contain rounded-full w-5 h-5 " src="../public/img/share.png" alt="">
-                  <p class="text-[#8B8B8B] font-bold">Share</p>
-                </div>
-              </div>
+             
+              <Preview
+               v-for="post in posts"
+                :key="post.post_id"
+                :title="post.title"
+                :user_name="post.user_name"
+                :img="post.user_img"
+                :id="post.post_id"
+              />
             </div>
-            <div class="w-full  bg-[#3A3939] rounded-3xl px-5 py-5">
-              <div class="text-white flex w-full">
-                <img class="w-[40px] object-contain rounded-full h-[40px] bg-white"
-                  src="https://pbs.twimg.com/media/FTZM5yzXwAEMX-K.jpg"
-                  alt="">
-                <p class="text-white ml-3 justify-center items-center flex ">Kiyotaka Ayanokōji</p>
+            <div class="w-full md:w-[40%]">
+              <div class="w-full py-3 bg-[#455DFF] rounded-md text-white text-xl md:text-2xl font-bold items-center justify-center flex">
+                ยอดนิยม
               </div>
-              <div class="text-white flex w-full text-2xl mt-2 ">ขอวิธีเข้ามอแบบไม่ต้องขึ้นรถเมย์</div>
-              <div class="flex mt-3 gap-2 text-lg">
-                <div class="bg-[#202020] rounded-3xl flex px-5 py-2 gap-2 items-center">
-                  <img class="object-contain rounded-full w-5 h-5 " src="../public/img/comment.png" alt="">
-                  <p class="text-[#8B8B8B] font-bold">5</p>
-                </div>
-                <div class="bg-[#202020] rounded-3xl flex px-5 py-2 gap-2 items-center">
-                  <img class="object-contain rounded-full w-5 h-5 " src="../public/img/save.png" alt="">
-                  <p class="text-[#8B8B8B] font-bold">Save</p>
-                </div>
-                <div class="bg-[#202020] rounded-3xl flex px-5 py-2 gap-2 items-center">
-                  <img class="object-contain rounded-full w-5 h-5 " src="../public/img/share.png" alt="">
-                  <p class="text-[#8B8B8B] font-bold">Share</p>
-                </div>
-              </div>
+              <ul class="w-full bg-[#3A3939] rounded-lg mt-4 text-white text-xl md:text-2xl font-bold flex flex-col">
+                <NuxtLink v-for="popular in popularPosts" :key="popular" class="hover:bg-[#585757] delay-50 p-3 md:p-4 rounded-sm" :to="'tags/'+popular">
+                  {{ popular }}
+                </NuxtLink>
+              </ul>
             </div>
-            <div class="w-full  bg-[#3A3939] rounded-3xl px-5 py-5">
-              <div class="text-white flex w-full">
-                <img class="w-[40px] object-contain rounded-full h-[40px] bg-white"
-                  src="https://pbs.twimg.com/media/ErEGc9BW8AQ5vDP.jpg"
-                  alt="">
-                <p class="text-white ml-3 justify-center items-center flex">คนไม่จำเป็น</p>
-              </div>
-              <div class="text-white flex w-full text-2xl mt-2">หาซื้อเฉาก๊วยชากังราวด่วนๆ</div>
-              <div class="flex mt-3 gap-2 text-lg">
-                <div class="bg-[#202020] rounded-3xl flex px-5 py-2 gap-2 items-center">
-                  <img class="object-contain rounded-full w-5 h-5 " src="../public/img/comment.png" alt="">
-                  <p class="text-[#8B8B8B] font-bold">5</p>
-                </div>
-                <div class="bg-[#202020] rounded-3xl flex px-5 py-2 gap-2 items-center">
-                  <img class="object-contain rounded-full w-5 h-5 " src="../public/img/save.png" alt="">
-                  <p class="text-[#8B8B8B] font-bold">บันทึก</p>
-                </div>
-                <div class="bg-[#202020] rounded-3xl flex px-5 py-2 gap-2 items-center">
-                  <img class="object-contain rounded-full w-5 h-5 " src="../public/img/share.png" alt="">
-                  <p class="text-[#8B8B8B] font-bold">แชร์</p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="w-[40%] ">
-            <div
-              class="w-full py-3 bg-[#8D38C9] rounded-md text-white text-2xl font-bold items-center justify-center flex">
-              ยอดนิยม</div>
-            <ul
-              class="w-full bg-[#3A3939] py-8 rounded-2xl mt-4 text-white text-2xl px-5 font-bold gap-7 flex flex-col">
-              <li>วิศวกรรมซอฟต์แวร์</li>
-              <li>การ์ตูน</li>
-              <li>รถเมย์มอ</li>
-              <li>ร้านเด็ดหน้ามอ</li>
-              <li>เรื่องหลอนมพ</li>
-              <li>หาหอพัก</li>
-              <li>รถรับส่ง</li>
-              <li>ค่าเฟ่หน้ามอ</li>
-              <li>รับหิ้ว</li>
-            </ul>
           </div>
         </div>
-      </div>
-      <div class="w-[15%] ">
-
+        <div class="hidden md:block w-[15%]"></div>
       </div>
     </div>
-  </div>
-</template>
+  </template>
+  
+  <script setup>
+  import axios from "axios";
+  const profile = ref([]);
+  const posts = ref([]);
+  const categories = ref([
+    { name: "อาหาร", img: "food.png" },
+    { name: "หนังสือ", img: "book.png" },
+    { name: "กีฬา", img: "sport.png" },
+    { name: "สัตว์เลี้ยง", img: "pet.png" },
+    { name: "เมคอัพ", img: "makeup.png" },
+    { name: "ศิลปะ", img: "art.png" },
+    { name: "วิทยาศาสตร์", img: "wit.png" },
+    { name: "ต่างประเทศ", img: "world.png" },
+    { name: "ธรรมชาติ", img: "nature.png" },
+    { name: "ศิลปิน", img: "artist.png" },
+    { name: "เกม", img: "game.png" },
+    { name: "หนัง", img: "movie.png" },
+    { name: "เพลง", img: "music.png" },
+    { name: "ความรัก", img: "love.png" },
+    { name: "คณิตศาสตร์", img: "math.png" },
+    { name: "ท่องเที่ยว", img: "travel.png" }
+  ]);
+  
+  const popularPosts = ref([
+    "วิศวกรรมซอฟต์แวร์",
+    "การ์ตูน",
+    "รถเมย์มอ",
+    "ร้านเด็ดหน้ามอ",
+    "เรื่องหลอนมพ",
+    "หาหอพัก",
+    "รถรับส่ง",
+    "คาเฟ่หน้ามอ",
+    "รับหิ้ว",
+  ]);
+  
+  onMounted(async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/api/posts"); // ใช้ endpoint ของ API ที่คุณมี
+      posts.value = response.data;
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      
+    }
+    
+  });
 
-<style></style>
-<script>
+  </script>
+  
 
-</script>
+  
