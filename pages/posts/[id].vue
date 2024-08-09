@@ -1,38 +1,49 @@
 <template>
   <title>{{ post.title }}</title>
-  <div class="w-full flex bg-[#191A1A] min-h-screen">
+  <div class="w-full flex bg-[#191A1A] min-h-screen pt-[80px]">
     <div class="w-[15%]"></div>
     <div class="container px-4 md:px-0 flex mt-5 gap-5">
       <!-- Post Content -->
       <div class="bg-[#3A3939] w-[65%] rounded-2xl text-white p-7">
         <!-- User Profile -->
         <div class="flex items-center mb-3">
-          <img v-if="post.user_img" class="w-12 h-12 rounded-full object-contain bg-white"
-            :src="`http://localhost:8000/uploads/profile/${post.user_img}`" alt="User Image" />
-          <img v-else class="w-12 h-12 rounded-full object-cover" src="../public/profile/default.jpg"
-            alt="Default User Image" />
-          <p class="ml-3 text-lg font-bold ">{{ post.user_name }}</p>
-          <div class="ml-5 rounded-full w-2 h-2 bg-white"></div>
-          <p class="ml-3">{{ dayjs(post.create_at).fromNow() }}</p>
-        </div>
-        
+  <img v-if="post.user_img"
+       class="w-12 h-12 rounded-full object-cover bg-slate-500"
+       :src="`http://localhost:8000/uploads/profile/${post.user_img}`"
+       alt="User Image" />
+  <img v-else
+       class="w-12 h-12 rounded-full object-cover"
+       src="../public/profile/default.jpg"
+       alt="Default User Image" />
+  <p class="ml-3 text-lg font-bold">{{ post.user_name }}</p>
+  <div class="ml-5 rounded-full w-2 h-2 bg-white"></div>
+  <p class="ml-3">{{ dayjs(post.create_at).fromNow() }}</p>
+</div>
 
+<h2 class="text-3xl font-bold mb-3">{{ post.title }}</h2>
+<div v-if="post.sub_cate_info" class="post-info flex gap-2">
+      <div v-for="(sub, index) in post.sub_cate_info" :key="index" class="sub-category">
+        <p class="bg-gray-800 inline-block px-3 py-1 text-white rounded-lg">
+          {{ sub.subcatename }}
+        </p>
+      </div>
+    </div>
 
-        <h2 class="text-3xl font-bold mb-3">{{ post.title }}</h2>
-        <p class="bg-[#2A2A2A] w-[100px] p-2 text-center rounded-lg mb-3">{{ post.sub_cate_name }}</p>
-        <div class="mb-3">
-          <img v-if="post.img" class="w-full object-cover rounded-lg"
-            :src="`http://localhost:8000/uploads/posts/${post.img}`" alt="Post Image" />
-        </div>
-        <p class="text-xl">{{ post.content }}</p>
+<div class="mb-3 w-full items-center justify-center flex  py-1 rounded-xl">
+  <img v-if="post.img"
+       class="object-contain rounded-3xl  h-96 "
+       :src="`http://localhost:8000/uploads/posts/${post.img}`"
+       alt="Post Image" />
+</div>
 
-        <!-- Actions -->
-        <div class="flex mt-5 gap-4 justify-center items-center">
-          <img @click="showCommentInput = !showCommentInput" class="w-10 h-10 cursor-pointer" src="/img/comment.png"
-            alt="Comment Icon">
-          <img class="w-8 h-8 cursor-pointer" src="/img/share.png" alt="Share Icon">
-          <img class="w-7 h-7 ml-auto cursor-pointer" src="/img/save.png" alt="Save Icon">
-        </div>
+<p class="text-xl">{{ post.content }}</p>
+
+<!-- Actions -->
+<div class="flex mt-5 gap-4 justify-center items-center">
+  <img @click="showCommentInput = !showCommentInput" class="w-10 h-10 cursor-pointer" src="/img/comment.png" alt="Comment Icon">
+  <img class="w-8 h-8 cursor-pointer" src="/img/share.png" alt="Share Icon">
+  <img class="w-7 h-7 ml-auto cursor-pointer" src="/img/save.png" alt="Save Icon">
+</div>
 
         <!-- Comment Input -->
         <div v-if="showCommentInput" class="mt-5">
@@ -46,6 +57,7 @@
             <button @click="submitComment" class="bg-[#455DFF] mt-2 px-4 py-2 rounded-lg text-white font-semibold">
               Submit
             </button>
+
           </div>
         </div>
 
@@ -68,7 +80,7 @@
           <div v-for="comment in sortedComments" :key="comment.comment_id" class="mb-4">
             <div class="p-4 rounded-lg">
               <div class="flex items-center mb-2">
-                <img v-if="comment.user_img" class="w-8 h-8 rounded-full object-contain bg-white"
+                <img v-if="comment.user_img" class="w-8 h-8 rounded-full object-contain bg-slate-500"
                   :src="`http://localhost:8000/uploads/profile/${comment.user_img}`" alt="User Image" />
                 <img v-else class="w-7 h-7 rounded-full object-cover" src="../public/profile/default.jpg"
                   alt="Default User Image" />
@@ -100,13 +112,14 @@
               <div v-if="comment.replies && comment.replies.length" class=" pl-4">
                 <div v-for="reply in comment.replies" :key="reply.reply_id" class="bg-[#3A3939] p-3 rounded-lg ">
                   <div class="flex items-center mb-2">
-                    <img v-if="reply.user_img" class="w-7 h-7 rounded-full object-contain bg-white"
+                    <img v-if="reply.user_img" class="w-7 h-7 rounded-full object-contain bg-slate-500"
                       :src="`http://localhost:8000/uploads/profile/${reply.user_img}`" alt="User Image" />
                     <img v-else class="w-8 h-8 rounded-full object-cover" src="../public/profile/default.jpg"
                       alt="Default User Image" />
                     <p class="ml-3 font-bold text-base">{{ reply.user_name }}</p>
                   </div>
                   <p class="text-base ml-3 border-l-[1px] pl-5 border-bl">{{ reply.content }}</p>
+                  
                 </div>
               </div>
             </div>
@@ -142,7 +155,7 @@ import Swal from 'sweetalert2'
 import dayjs from 'dayjs';
 import 'dayjs/locale/th'; // นำเข้า locale ภาษาไทย
 import relativeTime from 'dayjs/plugin/relativeTime';
-
+const config = useRuntimeConfig()
 dayjs.extend(relativeTime); // ใช้งานปลั๊กอิน relativeTime
 dayjs.locale('th');
 
@@ -176,7 +189,7 @@ const popularPosts = ref([
 
 const fetchPost = async () => {
   try {
-    const response = await axios.get(`http://localhost:8000/api/posts/${postId}`)
+    const response = await axios.get(config.public.ApiBase+`/api/posts/${postId}`)
     post.value = response.data
   } catch (error) {
     console.error('Error fetching post:', error)
@@ -186,7 +199,7 @@ const fetchPost = async () => {
 // Fetch comments for the post
 const fetchComments = async () => {
   try {
-    const response = await axios.get(`http://localhost:8000/api/comments/${postId}`)
+    const response = await axios.get(config.public.ApiBase+`/api/comments/${postId}`)
     let commentsData = response.data
 
     // Fetch replies for each comment
@@ -211,7 +224,7 @@ const fetchComments = async () => {
 // Fetch replies for a comment
 const fetchReplies = async (commentId) => {
   try {
-    const response = await axios.get(`http://localhost:8000/api/comments/replies/${commentId}/`)
+    const response = await axios.get(config.public.ApiBase+`/api/comments/replies/${commentId}/`)
     return response.data
   } catch (error) {
     console.error('Error fetching replies:', error)
@@ -228,7 +241,7 @@ const submitComment = async () => {
 
   try {
     await axios.post(
-      `http://localhost:8000/api/comments/${postId}/`,
+      config.public.ApiBase+`/api/comments/${postId}/`,
       { content: newComment.value },
       { headers: { Authorization: `${token}` } }
     )
@@ -267,14 +280,14 @@ const submitReply = async (commentId) => {
 
   try {
     await axios.post(
-      `http://localhost:8000/api/comments/${commentId}/replies`,
+      config.public.ApiBase+`/api/comments/${commentId}/replies`,
       { content: replyContent.value },
       { headers: { Authorization: `${token}` } }
     )
 
     await Swal.fire({
       icon: 'success',
-      title: 'ตอบกลับได้แล้ว',
+      title: 'ตอบกลับสำเร็จ',
       showConfirmButton: false,
       timer: 500,
     })

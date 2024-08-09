@@ -1,56 +1,83 @@
 <template>
-  <div class="min-h-screen bg-gray-100">
-    <div class="container mx-auto py-8">
-      <div class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
-        <h1 class="text-2xl font-bold mb-4">Profile</h1>
-        <div class="space-y-4">
-          <div class="flex flex-col">
-            <div class="w-full flex justify-center">
-            <img  class="w-[300px] h-[300px] object-contain" :src="'http://localhost:8000/uploads/profile/'+profile.img" alt="">
-          </div>
-            <label class="block text-sm font-medium text-gray-700">Username</label>
-            <div class="mt-1 p-2 border rounded bg-gray-50">{{ profile.name }}</div>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Email</label>
-            <div class="mt-1 p-2 border rounded bg-gray-50">{{ profile.email }}</div>
-          </div>
+  <title>โปรไฟล์ของฉัน</title>
+  
+  <div class="container md:w-[80%] pt-[100px] mx-auto">
+    <div class="relative">
+      <!-- Background image -->
+      <div class="h-72 overflow-hidden rounded-t-xl">
+        <img src="../public/img/bg.jpg" class="w-full h-full object-cover" alt="Background">
+      </div>
+      
+      <!-- Profile image container -->
+      <div class="absolute bottom-0 left-8 transform translate-y-1/2">
+        <div class="w-32 h-32 rounded-full border-[6px] border-[#3A3939] overflow-hidden">
+          <img v-if="profile.img" :src="getProfileImageUrl" class="w-full h-full object-cover" alt="Profile">
+          <img v-else src="../public/img/default-profile.jpg" class="w-full h-full object-cover" alt="Default Profile">
         </div>
-        <button @click="home" class="mt-6 w-full px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring focus:ring-indigo-200">Home</button>
-        <button @click="logout" class="mt-6 w-full px-4 py-2 text-white bg-indigo-600 rounded hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-200">Logout</button>
       </div>
     </div>
+    
+    <!-- Dark background for name -->
+    <div class="bg-[#3A3939] p-5 pt-16">
+      <div class="ml-5 mt-2 text-white grid grid-cols-2 gap-4">
+        <div>
+          <h2 class="text-3xl font-bold">{{ profile.name || 'User Name' }}</h2>
+          <p class="mt-2 text-lg">You can not be sad when Daisy is around, she will not let you.</p>
+        </div>
+        <div class="flex justify-end items-start">
+          <div class="bg-[#455DFF] text-xl px-10 py-2 rounded-xl cursor-pointer">แก้ไขข้อมูล</div>
+        </div>
+      </div>
     </div>
+
+    <div class="mt-5 bg-[#3A3939] p-3 rounded-t-md grid md:grid-cols-5 grid-cols-1 gap-5 text-white text-center text-xl font-bold">
+      <div class="bg-[#272626] p-4 rounded-xl">กระทู้ที่ฉันตั้ง</div>
+      <div class="bg-[#272626] p-4 rounded-xl">กระทู้ที่ตอบ</div>
+      <div class="bg-[#272626] p-4 rounded-xl">กระทู้โปรด</div>
+    </div>
+
+    <div class="mt-3 bg-[#3A3939] h-72 flex flex-col md:flex-row justify-center items-center gap-3 text-white">
+      <div class="text-xl text-center">คุณยังไม่ได้ตั้งกระทู้</div>
+      <div class="bg-[#455DFF] text-xl px-10 py-2 rounded-xl cursor-pointer">ตั้งกระทู้แรกของคุณ</div>
+    </div>
+  </div>
 </template>
 
 <script>
+const config = useRuntimeConfig()
+
 import axios from 'axios'
 
 export default {
-  middleware: [
-    'auth',
-  ],
+  middleware: ['auth'],
   data() {
     return {
       profile: {}
     }
   },
-  async mounted() {
-    try {
-      const token = localStorage.getItem('token')
-      const response = await axios.get('http://localhost:8000/api/user/me', {
-        headers: {
-          Authorization: `${token}`
-        }
-      })
-      this.profile = response.data
-    } catch (err) {
-      console.error('Error fetching profile:', err)
-      // Handle error, e.g., redirect to login page if not authenticated
-      this.$router.push('/login')
+  computed: {
+    getProfileImageUrl() {
+      return this.profile.img ? `${config.public.ApiBase}/uploads/profile/${this.profile.img}` : null
     }
   },
+  async mounted() {
+    await this.fetchProfile()
+  },
   methods: {
+    async fetchProfile() {
+      try {
+        const token = localStorage.getItem('token')
+        const response = await axios.get('http://localhost:8000/api/user/me', {
+          headers: {
+            Authorization: `${token}`
+          }
+        })
+        this.profile = response.data
+      } catch (err) {
+        console.error('Error fetching profile:', err)
+        this.$router.push('/login')
+      }
+    },
     logout() {
       localStorage.removeItem('token')
       this.$router.push('/login')
@@ -62,6 +89,8 @@ export default {
 }
 </script>
 
-<style>
-/* Custom styles if needed */
+<style scoped>
+.container {
+  z-index: 1;
+}
 </style>

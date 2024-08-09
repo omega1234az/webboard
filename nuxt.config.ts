@@ -3,8 +3,9 @@
 
 export default defineNuxtConfig({
   
-  ssr: false,
   
+  ssr: false,
+  routeRules: {'/posts': { ssr: true },},
   app: {
     head: {
       meta: [
@@ -14,20 +15,29 @@ export default defineNuxtConfig({
       link: [
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Kanit:ital,wght@1,300&display=swap' },
-        { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+Thai:wght@100..900&display=swap'},
         { rel: 'icon', href: '' }
       ],
       script: [
-        { src: 'https://cdn.jsdelivr.net/npm/sweetalert2@11' }
+        { src: 'https://cdn.jsdelivr.net/npm/sweetalert2@11'}
       ],
       noscript: [],
+      
 
     },
 
   },
-
-  modules: ["@nuxt/ui"],
+  
+  runtimeConfig: {
+    public: {
+      ApiBase: process.env.API_BASE, 
+    }
+  },
+  
+  
+  modules: ["@nuxt/ui","@nuxt/fonts"],
+ 
+  
 
   compatibilityDate: '2024-07-05'
 }

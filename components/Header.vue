@@ -1,18 +1,18 @@
 <template>
-  <div>
-    <div class="w-full text-white bg-[#0F0F0F] flex items-center ">
+  <div class="relative">
+    <div class="w-full text-white bg-[#0F0F0F] flex items-center fixed z-20">
       <div class="justify-center font-bold text-2xl text-center w-[10%]">
         <div class="">LOGO</div>
       </div>
       <!-- Updated container class to properly contain the menu -->
-      <div class="flex-1 ">
+      <div class="flex-1">
         <div class="container mx-auto text-center py-2 px-2 font-bold text-xl grid grid-cols-3">
           <NuxtLink to="/" class="p-5 hover:bg-[#525050] rounded-md">Home</NuxtLink>
           <NuxtLink to="/" class="p-5 hover:bg-[#525050] rounded-md">Popular</NuxtLink>
-          <NuxtLink to="/" class="p-5 hover:bg-[#525050] rounded-md">Create</NuxtLink>
+          <NuxtLink to="/createpost" class="p-5 hover:bg-[#525050] rounded-md">Create</NuxtLink>
         </div>
       </div>
-      <div class="px-2 text-center font-bold text-2xl text-black relative">
+      <div class="px-2 text-center text-2xl text-black relative">
         <div class="relative">
           <input
             v-model="searchQuery"
@@ -28,19 +28,22 @@
           />
           <ul
             v-show="dropdownVisible && searchQuery"
-            class="absolute w-full bg-white border border-gray-400 rounded mt-1 z-10"
+            class="absolute w-full bg-white border border-gray-400 rounded mt-1 z-30"
           >
             <li
               v-for="item in filteredItems"
-              :key="item.id"
+              :key="item.sub_cate_id"
               class="p-2 hover:bg-gray-200 cursor-pointer"
               @mousedown.prevent="selectItem(item)"
             >
-              {{ item.title }}
+              {{ item.name }}
             </li>
             <li v-if="filteredItems.length === 0" class="p-2 text-gray-500">
               ไม่พบข้อมูล
             </li>
+            <NuxtLink :to="'/search/'+searchQuery" class="block">
+              <li class="p-2 bg-transparent cursor-default">ค้นหา {{ searchQuery }} ใน โพส</li>
+            </NuxtLink>
           </ul>
         </div>
       </div>
@@ -56,12 +59,12 @@
         <div v-else class="relative">
           <img
             @click="toggleProfileDropdown"
-            class="object-contain rounded-full w-[50px] h-[50px] bg-white cursor-pointer"
+            class="object-cover rounded-full w-[50px] h-[50px] bg-slate-500 cursor-pointer"
             :src="`http://localhost:8000/uploads/profile/${profile.img}`"
           />
           <ul
             v-show="profileDropdownVisible"
-            class="absolute right-0 mt-2 w-48 bg-[#3A3939] rounded-lg text-xl font-bold"
+            class="absolute right-0 mt-2 w-48 bg-[#3A3939] rounded-lg text-xl font-bold z-30"
           >
             <li
               @click="navigateTo('/profile')"
@@ -88,9 +91,17 @@
   </div>
 </template>
 
+<style scoped>
+/* เพิ่ม z-index สำหรับ dropdowns เพื่อให้แน่ใจว่ามันแสดงอยู่เหนือคอมโพเนนต์อื่น ๆ */
+.dropdown {
+  position: absolute;
+  z-index: 9999;
+}
+</style>
+
+
 <script setup>
 import axios from 'axios';
-
 
 const searchQuery = ref('');
 const dropdownVisible = ref(false);
@@ -130,7 +141,7 @@ async function fetchProfile() {
   } catch (error) {
     console.error('Error fetching profile:', error);
     localStorage.removeItem('token');
-    isLoggedIn.value=false;
+    isLoggedIn.value = false;
   }
 }
 
@@ -142,7 +153,7 @@ function logout() {
 }
 
 function selectItem(item) {
-  searchQuery.value = item.title;
+  searchQuery.value = item.name;
   dropdownVisible.value = false;
 }
 
@@ -163,7 +174,7 @@ function redirectToLogin() {
 
 const filteredItems = computed(() => {
   return items.value.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+    item.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
 
@@ -174,6 +185,26 @@ function resetData() {
   items.value = [];
   profile.value = {};
 }
+
+async function fetchSubCategories() {
+  try {
+    const response = await axios.get('http://localhost:8000/api/categories/search', {
+      params: {
+        keyword: searchQuery.value
+      }
+    });
+    items.value = response.data;
+  } catch (error) {
+    console.error('Error fetching subcategories:', error);
+  }
+}
+
+// Watch searchQuery and fetch subcategories when it changes
+watch(searchQuery, async (newQuery, oldQuery) => {
+  if (newQuery !== oldQuery) {
+    await fetchSubCategories();
+  }
+});
 
 onMounted(async () => {
   await checkAuthAndFetchProfile();
@@ -186,6 +217,3 @@ watchEffect(async () => {
 });
 </script>
 
-<style scoped>
-/* ใส่สไตล์เพิ่มเติมตามต้องการ */
-</style>

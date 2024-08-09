@@ -5,3 +5,9 @@
         <slot />
 </div>
 </template>
+<style>
+body{
+  font-family: "Noto Sans Thai", sans-serif;
+  
+}
+</style>
