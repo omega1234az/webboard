@@ -20,7 +20,7 @@
   <p class="ml-3">{{ dayjs(post.create_at).fromNow() }}</p>
 </div>
 
-<h2 class="text-3xl font-bold mb-3">{{ post.title }}</h2>
+<h2 class="text-2xl font-bold mb-3">{{ post.title }}</h2>
 <div v-if="post.sub_cate_info" class="post-info flex gap-2">
       <div v-for="(sub, index) in post.sub_cate_info" :key="index" class="sub-category">
         <p class="bg-gray-800 inline-block px-3 py-1 text-white rounded-lg">
@@ -29,7 +29,7 @@
       </div>
     </div>
 
-<div class="mb-3 w-full items-center justify-center flex  py-1 rounded-xl">
+<div class="mb-3 w-full items-center justify-start flex mt-2  py-1 rounded-xl">
   <img v-if="post.img"
        class="object-contain rounded-3xl  h-96 "
        :src="`http://localhost:8000/uploads/posts/${post.img}`"
@@ -40,9 +40,9 @@
 
 <!-- Actions -->
 <div class="flex mt-5 gap-4 justify-center items-center">
-  <img @click="showCommentInput = !showCommentInput" class="w-10 h-10 cursor-pointer" src="/img/comment.png" alt="Comment Icon">
-  <img class="w-8 h-8 cursor-pointer" src="/img/share.png" alt="Share Icon">
-  <img class="w-7 h-7 ml-auto cursor-pointer" src="/img/save.png" alt="Save Icon">
+  <img @click="showCommentInput = !showCommentInput" class="w-8 h-8 cursor-pointer" src="public/img/comment.png" alt="Comment Icon">
+  <img class="w-6 h-6 cursor-pointer" src="public/img/share.png" alt="Share Icon">
+  <img class="w-7 h-7 ml-auto cursor-pointer" src="public/img/save.png" alt="Save Icon">
 </div>
 
         <!-- Comment Input -->
@@ -51,10 +51,10 @@
             rows="3" placeholder="เขียนข้อความ..."></textarea>
           <div class="w-full flex items-end justify-end gap-2">
             <button @click="showCommentInput = false"
-              class="bg-[#455DFF] mt-2 px-4 py-2 rounded-lg text-white font-semibold">
+              class="bg-[#0F0F0F] mt-2 px-4 py-2 rounded-2xl text-white font-semibold">
               Cancel
             </button>
-            <button @click="submitComment" class="bg-[#455DFF] mt-2 px-4 py-2 rounded-lg text-white font-semibold">
+            <button @click="submitComment" class="bg-[#0F0F0F] mt-2 px-4 py-2 rounded-2xl text-white font-semibold">
               Submit
             </button>
 
@@ -80,16 +80,22 @@
           <div v-for="comment in sortedComments" :key="comment.comment_id" class="mb-4">
             <div class="p-4 rounded-lg">
               <div class="flex items-center mb-2">
-                <img v-if="comment.user_img" class="w-8 h-8 rounded-full object-contain bg-slate-500"
+                <img v-if="comment.user_img" class="w-8 h-8 rounded-full object-cover bg-slate-500"
                   :src="`http://localhost:8000/uploads/profile/${comment.user_img}`" alt="User Image" />
                 <img v-else class="w-7 h-7 rounded-full object-cover" src="../public/profile/default.jpg"
                   alt="Default User Image" />
                 <p class="ml-3 font-bold text-lg">{{ comment.user_name }}</p>
+                <p class="ml-3">{{ dayjs(comment.create_at).fromNow() }}</p>
               </div>
 
               <p class="text-base ml-3.5 border-l-[1px] pl-5 ">{{ comment.content }}</p>
-              <img @click="toggleReplyInput(comment.comment_id)" class="w-8 h-8 mt-2 ml-4 cursor-pointer"
-                src="/img/comment.png" alt="Reply Icon">
+              <div class="flex">
+                    <img @click="toggleReplyInput(comment.comment_id)" class="w-8 h-8 mt-2 ml-5 cursor-pointer"
+                src="public/img/comment.png" alt="Reply Icon">
+                <img class="w-6 h-6 mt-3 ml-3 cursor-pointer"
+                src="public/img/share.png" alt="Reply Icon">
+                <img class="w-6 h-6 mt-2.5 ml-auto cursor-pointer" src="public/img/save.png" alt="Save Icon">
+                  </div>
 
               <!-- Replies -->
               <div v-if="activeReplyId === comment.comment_id" class="mt-4">
@@ -98,11 +104,11 @@
                   placeholder="เขียนข้อความ..."></textarea>
                 <div class="flex justify-end items-end gap-2">
                   <button @click="activeReplyId = 0"
-                    class="bg-[#455DFF] mt-2 px-4 py-2 rounded-lg text-white font-semibold">
+                    class="bg-[#0F0F0F] mt-2 px-4 py-2 rounded-2xl text-white font-semibold">
                     Cancel
                   </button>
                   <button @click="submitReply(comment.comment_id)"
-                    class="bg-[#455DFF] mt-2 px-4 py-2 rounded-lg text-white font-semibold">
+                    class="bg-[#0F0F0F] mt-2 px-4 py-2 rounded-2xl text-white font-semibold">
                     Reply
                   </button>
                 </div>
@@ -112,13 +118,22 @@
               <div v-if="comment.replies && comment.replies.length" class=" pl-4">
                 <div v-for="reply in comment.replies" :key="reply.reply_id" class="bg-[#3A3939] p-3 rounded-lg ">
                   <div class="flex items-center mb-2">
-                    <img v-if="reply.user_img" class="w-7 h-7 rounded-full object-contain bg-slate-500"
+                    <img v-if="reply.user_img" class="w-7 h-7 rounded-full object-cover bg-slate-500"
                       :src="`http://localhost:8000/uploads/profile/${reply.user_img}`" alt="User Image" />
                     <img v-else class="w-8 h-8 rounded-full object-cover" src="../public/profile/default.jpg"
                       alt="Default User Image" />
                     <p class="ml-3 font-bold text-base">{{ reply.user_name }}</p>
+                    <p class="ml-3">{{ dayjs(reply.create_at).fromNow() }}</p>
+                    
                   </div>
                   <p class="text-base ml-3 border-l-[1px] pl-5 border-bl">{{ reply.content }}</p>
+                  <div class="flex">
+                    <img @click="toggleReplyInput(comment.comment_id)" class="w-8 h-8 mt-2 ml-4 cursor-pointer"
+                src="public/img/comment.png" alt="Reply Icon">
+                <img class="w-6 h-6 mt-3 ml-2 cursor-pointer"
+                src="public/img/share.png" alt="Reply Icon">
+                <img class="w-6 h-6 mt-2.5 ml-auto cursor-pointer" src="public/img/save.png" alt="Save Icon">
+                  </div>
                   
                 </div>
               </div>
@@ -129,17 +144,7 @@
 
       <!-- Popular Posts Section -->
       <div class="w-[35%]">
-        <div
-          class="w-full py-2 bg-[#455DFF] rounded-md text-white text-xl md:text-xl font-bold items-center justify-center flex">
-          ยอดนิยม
-        </div>
-        <ul class="w-full bg-[#3A3939] rounded-lg mt-2 text-white text-lg md:text-xl font-bold flex flex-col">
-          <NuxtLink v-for="popular in popularPosts" :key="popular"
-            class="hover:bg-[#585757] delay-50 p-3 md:p-4 rounded-sm" :to="'tags/' + popular">
-            {{ popular }}
-          </NuxtLink>
-        </ul>
-
+        <Popular/>
       </div>
     </div>
     <div class="w-[15%]"></div>

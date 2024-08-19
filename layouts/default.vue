@@ -1,7 +1,7 @@
 <template>
 
         <Header />
-        <div class="w-full bg-[#191A1A]">
+        <div class="w-full min-h-screen bg-[#191A1A]">
         <slot />
 </div>
 </template>

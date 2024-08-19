@@ -6,13 +6,14 @@
       </div>
       <!-- Updated container class to properly contain the menu -->
       <div class="flex-1">
-        <div class="container mx-auto text-center py-2 px-2 font-bold text-xl grid grid-cols-3">
-          <NuxtLink to="/" class="p-5 hover:bg-[#525050] rounded-md">Home</NuxtLink>
-          <NuxtLink to="/" class="p-5 hover:bg-[#525050] rounded-md">Popular</NuxtLink>
-          <NuxtLink to="/createpost" class="p-5 hover:bg-[#525050] rounded-md">Create</NuxtLink>
+        <div class="container mx-auto text-center py-1 px-2 font-bold text-md grid grid-cols-3">
+          <NuxtLink to="/" class="p-5 hover:bg-[#525050] rounded-md">หน้าแรก</NuxtLink>
+          <NuxtLink to="/popular" class="p-5 hover:bg-[#525050] rounded-md">ยอดนิยม</NuxtLink>
+          <NuxtLink to="/createpost" class="p-5 hover:bg-[#525050] rounded-md">ตั้งกระทู้</NuxtLink>
         </div>
       </div>
-      <div class="px-2 text-center text-2xl text-black relative">
+      
+      <div class="px-2 text-center text-xl text-black relative">
         <div class="relative">
           <input
             v-model="searchQuery"
@@ -26,23 +27,26 @@
             src="https://icons.veryicon.com/png/o/commerce-shopping/small-icons-with-highlights/search-260.png"
             class="absolute left-3 top-2 w-6 h-6"
           />
+          
           <ul
-            v-show="dropdownVisible && searchQuery"
+            v-show="dropdownVisible && searchQuery.length >= 3"
             class="absolute w-full bg-white border border-gray-400 rounded mt-1 z-30"
           >
             <li
               v-for="item in filteredItems"
               :key="item.sub_cate_id"
               class="p-2 hover:bg-gray-200 cursor-pointer"
-              @mousedown.prevent="selectItem(item)"
+              
             >
-              {{ item.name }}
+              <NuxtLink :to="'/tag/'+item.name" class="block">
+                {{ item.name }}
+              </NuxtLink>
             </li>
             <li v-if="filteredItems.length === 0" class="p-2 text-gray-500">
               ไม่พบข้อมูล
             </li>
-            <NuxtLink :to="'/search/'+searchQuery" class="block">
-              <li class="p-2 bg-transparent cursor-default">ค้นหา {{ searchQuery }} ใน โพส</li>
+            <NuxtLink :to="'/search/'+searchQuery">
+              <li class="p-2 bg-transparent hover:bg-gray-200 cursor-pointer">ค้นหา {{ searchQuery }} ใน โพส</li>
             </NuxtLink>
           </ul>
         </div>
@@ -73,7 +77,7 @@
               หน้าของฉัน
             </li>
             <li
-              @click="navigateTo('settings')"
+              @click="navigateTo('/settings')"
               class="px-4 py-2 hover:bg-[#525050] cursor-pointer"
             >
               การตั้งค่า
@@ -91,17 +95,23 @@
   </div>
 </template>
 
+
 <style scoped>
-/* เพิ่ม z-index สำหรับ dropdowns เพื่อให้แน่ใจว่ามันแสดงอยู่เหนือคอมโพเนนต์อื่น ๆ */
-.dropdown {
-  position: absolute;
-  z-index: 9999;
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 </style>
-
-
 <script setup>
+import { ref, watch, computed, onMounted, watchEffect } from 'vue';
 import axios from 'axios';
+import { useRouter, useRoute } from 'vue-router';
 
 const searchQuery = ref('');
 const dropdownVisible = ref(false);
@@ -187,6 +197,11 @@ function resetData() {
 }
 
 async function fetchSubCategories() {
+  if (searchQuery.value.length < 2) {
+    items.value = []; // Clear items if the query is too short
+    return;
+  }
+
   try {
     const response = await axios.get('http://localhost:8000/api/categories/search', {
       params: {
@@ -200,9 +215,11 @@ async function fetchSubCategories() {
 }
 
 // Watch searchQuery and fetch subcategories when it changes
-watch(searchQuery, async (newQuery, oldQuery) => {
-  if (newQuery !== oldQuery) {
+watch(searchQuery, async (newQuery) => {
+  if (newQuery.length >= 2) {
     await fetchSubCategories();
+  } else {
+    items.value = []; // Clear items if the query is too short
   }
 });
 
@@ -216,4 +233,3 @@ watchEffect(async () => {
   await checkAuthAndFetchProfile();
 });
 </script>
-
