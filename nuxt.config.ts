@@ -4,7 +4,7 @@
 export default defineNuxtConfig({
   
   
-  ssr: false,
+  
   routeRules: {'/posts': { ssr: true },},
   app: {
     head: {

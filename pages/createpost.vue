@@ -111,7 +111,7 @@ import Swal from 'sweetalert2';
 import { useRouter } from 'vue-router';
 
 const config = useRuntimeConfig();
-const token = localStorage.getItem('token');
+
 const router = useRouter();
 
 const title = ref('');
@@ -124,6 +124,33 @@ const selectedImage = ref(null);
 const selectedCategoryName = ref('');
 const selectedSubCategoryName = ref('');
 const selectedTags = ref([]);
+const useLocalStorage = () => {
+  const getItem = (key) => {
+    if (process.client) {
+      return localStorage.getItem(key);
+    }
+    return null;
+  };
+
+  const setItem = (key, value) => {
+    if (process.client) {
+      localStorage.setItem(key, value);
+    }
+  };
+
+  const removeItem = (key) => {
+    if (process.client) {
+      localStorage.removeItem(key);
+    }
+  };
+
+  return { getItem, setItem, removeItem };
+};
+
+const { getItem, setItem, removeItem } = useLocalStorage();
+
+const token = getItem('token')
+
 
 const fetchCategories = async () => {
   try {

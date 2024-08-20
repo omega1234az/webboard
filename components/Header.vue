@@ -125,6 +125,32 @@ const profile = ref({});
 const router = useRouter();
 const route = useRoute();
 
+// Composable function for localStorage
+const useLocalStorage = () => {
+  const getItem = (key) => {
+    if (process.client) {
+      return localStorage.getItem(key);
+    }
+    return null;
+  };
+
+  const setItem = (key, value) => {
+    if (process.client) {
+      localStorage.setItem(key, value);
+    }
+  };
+
+  const removeItem = (key) => {
+    if (process.client) {
+      localStorage.removeItem(key);
+    }
+  };
+
+  return { getItem, setItem, removeItem };
+};
+
+const { getItem, setItem, removeItem } = useLocalStorage();
+
 async function checkAuthAndFetchProfile() {
   await checkAuth();
   if (isLoggedIn.value) {
@@ -133,13 +159,13 @@ async function checkAuthAndFetchProfile() {
 }
 
 function checkAuth() {
-  const token = localStorage.getItem('token');
+  const token = getItem('token');
   isLoggedIn.value = !!token;
 }
 
 async function fetchProfile() {
   try {
-    const token = localStorage.getItem('token');
+    const token = getItem('token');
     if (!token) {
       console.error('No token found');
       return;
@@ -152,13 +178,13 @@ async function fetchProfile() {
     profile.value = response.data;   
   } catch (error) {
     console.error('Error fetching profile:', error);
-    localStorage.removeItem('token');
+    removeItem('token');
     isLoggedIn.value = false;
   }
 }
 
 function logout() {
-  localStorage.removeItem('token');
+  removeItem('token');
   isLoggedIn.value = false;
   profile.value = {};
   router.push('/login');
@@ -200,25 +226,23 @@ function resetData() {
 
 async function fetchSubCategories() {
   if (searchQuery.value.length < 2) {
-    items.value = []; // Clear items if the query is too short
+    items.value = [];
     return;
   }
 
   try {
-    const response = await axios.get('http://localhost:8000/api/categories/search/'+searchQuery.value, {
-    });
+    const response = await axios.get(`http://localhost:8000/api/categories/search/${searchQuery.value}`);
     items.value = response.data;
   } catch (error) {
     console.error('Error fetching subcategories:', error);
   }
 }
 
-// Watch searchQuery and fetch subcategories when it changes
 watch(searchQuery, async (newQuery) => {
   if (newQuery.length >= 2) {
     await fetchSubCategories();
   } else {
-    items.value = []; // Clear items if the query is too short
+    items.value = [];
   }
 });
 

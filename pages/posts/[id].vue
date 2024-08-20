@@ -172,26 +172,38 @@ const post = ref({})
 const comments = ref([])
 const newComment = ref('')
 const replyContent = ref('')
-const token = localStorage.getItem('token')
+
 const showCommentInput = ref(true)
 const activeReplyId = ref(null)
 const filter = ref('popular') // Default filter is 'newest'
 
 
-const popularPosts = ref([
-  "วิศวกรรมซอฟต์แวร์",
-  "การ์ตูน",
-  "รถเมย์มอ",
-  "ร้านเด็ดหน้ามอ",
-  "เรื่องหลอนมพ",
-  "หาหอพัก",
-  "รถรับส่ง",
-  "คาเฟ่หน้ามอ",
-  "รับหิ้ว",
+const useLocalStorage = () => {
+  const getItem = (key) => {
+    if (process.client) {
+      return localStorage.getItem(key);
+    }
+    return null;
+  };
 
-]);
+  const setItem = (key, value) => {
+    if (process.client) {
+      localStorage.setItem(key, value);
+    }
+  };
 
+  const removeItem = (key) => {
+    if (process.client) {
+      localStorage.removeItem(key);
+    }
+  };
 
+  return { getItem, setItem, removeItem };
+};
+
+const { getItem, setItem, removeItem } = useLocalStorage();
+
+const token = getItem('token')
 const fetchPost = async () => {
   try {
     const response = await axios.get(config.public.ApiBase+`/api/posts/${postId}`)

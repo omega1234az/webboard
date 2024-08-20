@@ -44,52 +44,83 @@
     </div>
   </div>
 </template>
-
-<script>
-const config = useRuntimeConfig()
-
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
+import { useRuntimeConfig } from '#app'
 
-export default {
-  middleware: ['auth'],
-  data() {
-    return {
-      profile: {}
+const config = useRuntimeConfig()
+const router = useRouter()
+const profile = ref({})
+const useLocalStorage = () => {
+  const getItem = (key) => {
+    if (process.client) {
+      return localStorage.getItem(key);
     }
-  },
-  computed: {
-    getProfileImageUrl() {
-      return this.profile.img ? `${config.public.ApiBase}/uploads/profile/${this.profile.img}` : null
+    return null;
+  };
+
+  const setItem = (key, value) => {
+    if (process.client) {
+      localStorage.setItem(key, value);
     }
-  },
-  async mounted() {
-    await this.fetchProfile()
-  },
-  methods: {
-    async fetchProfile() {
-      try {
-        const token = localStorage.getItem('token')
-        const response = await axios.get('http://localhost:8000/api/user/me', {
-          headers: {
-            Authorization: `${token}`
-          }
-        })
-        this.profile = response.data
-      } catch (err) {
-        console.error('Error fetching profile:', err)
-        this.$router.push('/login')
+  };
+
+  const removeItem = (key) => {
+    if (process.client) {
+      localStorage.removeItem(key);
+    }
+  };
+
+  return { getItem, setItem, removeItem };
+};
+
+const { getItem, setItem, removeItem } = useLocalStorage();
+
+
+// Computed property to get profile image URL
+const getProfileImageUrl = computed(() => {
+  return profile.value.img ? `${config.public.ApiBase}/uploads/profile/${profile.value.img}` : null
+})
+
+// Function to fetch profile
+const fetchProfile = async () => {
+  try {
+    const token = getItem('token')
+    const response = await axios.get('http://localhost:8000/api/user/me', {
+      headers: {
+        Authorization: `${token}`
       }
-    },
-    logout() {
-      localStorage.removeItem('token')
-      this.$router.push('/login')
-    },
-    home() {
-      this.$router.push('/')
-    }
+    })
+    profile.value = response.data
+  } catch (err) {
+    console.error('Error fetching profile:', err)
+    router.push('/login')
   }
 }
+
+// Function to handle logout
+const logout = () => {
+  localStorage.removeItem('token')
+  router.push('/login')
+}
+
+// Function to navigate to home
+const home = () => {
+  router.push('/')
+}
+
+// Fetch profile on component mount
+onMounted(fetchProfile)
 </script>
+
+<style scoped>
+.container {
+  z-index: 1;
+}
+</style>
+
 
 <style scoped>
 .container {
