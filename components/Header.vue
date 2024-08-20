@@ -4,7 +4,6 @@
       <div class="justify-center font-bold text-2xl text-center w-[10%]">
         <div class="">LOGO</div>
       </div>
-      <!-- Updated container class to properly contain the menu -->
       <div class="flex-1">
         <div class="container mx-auto text-center py-1 px-2 font-bold text-md grid grid-cols-3">
           <NuxtLink to="/" class="p-5 hover:bg-[#525050] rounded-md">หน้าแรก</NuxtLink>
@@ -29,24 +28,27 @@
           />
           
           <ul
-            v-show="dropdownVisible && searchQuery.length >= 3"
+            v-show="dropdownVisible && searchQuery.length >= 2"
             class="absolute w-full bg-white border border-gray-400 rounded mt-1 z-30"
           >
             <li
               v-for="item in filteredItems"
-              :key="item.sub_cate_id"
+              :key="item.id"
               class="p-2 hover:bg-gray-200 cursor-pointer"
-              
             >
-              <NuxtLink :to="'/tag/'+item.name" class="block">
-                {{ item.name }}
+            
+              <NuxtLink :to="getLink(item)">
+                <div class='flex items-center justify-center gap-2'>
+                <img class="w-6 h-6   cursor-pointer" :src="item.img_url" alt="Save Icon">
+                <p class="mt-1">{{ item.name }}</p>
+              </div>
               </NuxtLink>
             </li>
             <li v-if="filteredItems.length === 0" class="p-2 text-gray-500">
               ไม่พบข้อมูล
             </li>
             <NuxtLink :to="'/search/'+searchQuery">
-              <li class="p-2 bg-transparent hover:bg-gray-200 cursor-pointer">ค้นหา {{ searchQuery }} ใน โพส</li>
+              <li class="p-2 bg-transparent hover:bg-gray-200 cursor-pointer">ค้นหา {{ searchQuery }} ใน โพสต์ทั้งหมด</li>
             </NuxtLink>
           </ul>
         </div>
@@ -95,7 +97,6 @@
   </div>
 </template>
 
-
 <style scoped>
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
@@ -108,8 +109,9 @@
   scrollbar-width: none;  /* Firefox */
 }
 </style>
+
 <script setup>
-import { ref, watch, computed, onMounted, watchEffect } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
 
@@ -203,10 +205,7 @@ async function fetchSubCategories() {
   }
 
   try {
-    const response = await axios.get('http://localhost:8000/api/categories/search', {
-      params: {
-        keyword: searchQuery.value
-      }
+    const response = await axios.get('http://localhost:8000/api/categories/search/'+searchQuery.value, {
     });
     items.value = response.data;
   } catch (error) {
@@ -227,9 +226,7 @@ onMounted(async () => {
   await checkAuthAndFetchProfile();
 });
 
-watchEffect(async () => {
-  // ตรวจสอบการเปลี่ยนแปลงของ route
-  route.path; // เพิ่มบรรทัดนี้เพื่อให้ watchEffect ทำงานเมื่อ route เปลี่ยน
-  await checkAuthAndFetchProfile();
-});
+function getLink(item) {
+  return item.type === 'category' ? `/categories/${item.id}` : `/tags/${item.id}`;
+}
 </script>
